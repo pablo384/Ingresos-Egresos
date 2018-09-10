@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import * as firebase from 'firebase';
 import Swal from 'sweetalert2';
 import {map} from 'rxjs/operators';
+import { User } from 'src/app/auth/user.model';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,9 @@ import {map} from 'rxjs/operators';
 export class AuthService {
 
   constructor(private afAuth: AngularFireAuth,
-    private router: Router) { }
+    private router: Router,
+    private aFDB: AngularFirestore
+    ) { }
 
     initAuthListener() {
       this.afAuth.authState.subscribe((fbUser: firebase.User) => {
@@ -25,7 +29,17 @@ export class AuthService {
     .createUserWithEmailAndPassword(email, password)
     .then(respuesta => {
       // console.log(respuesta);
-      this.router.navigate(['/']);
+      const user: User = {
+        uid: respuesta.user.uid,
+        nombre: nombre,
+        email: respuesta.user.email
+      };
+      this.aFDB.doc(`${user.uid}/usuario`)
+      .set(user)
+      .then( () => {
+        this.router.navigate(['/']);
+      })
+      .catch( err => console.log(err));
     })
     .catch(error => {
         console.log(error);
