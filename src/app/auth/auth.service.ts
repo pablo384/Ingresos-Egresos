@@ -23,4 +23,15 @@ export class AuthService {
 
       });
   }
+
+  login(email: string, password: string) {
+    this.afAuth.auth
+    .signInWithEmailAndPassword(email, password)
+    .then(res => {
+      console.log(res);
+      this.router.navigate(['/']);
+    })
+    .catch(err => {console.log(err);
+    });
+  }
 }
