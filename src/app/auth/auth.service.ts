@@ -10,13 +10,14 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../app.reducer';
 import { ActivarLoadingAction, DesactivarLoadingAction } from '../shared/ui.accions';
 import { Subscription } from 'rxjs';
+import { SetUserAction } from './auth.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  subscripcionUser: Subscription;
+  private subscripcionUser: Subscription;
 
   constructor(private afAuth: AngularFireAuth,
     private router: Router,
@@ -30,10 +31,14 @@ export class AuthService {
         console.log(fbUser.uid);
         this.aFDB.doc(`${fbUser.uid}/usuario`).valueChanges()
         .subscribe(
-          userOBJ => {
-            console.log(userOBJ);
+          (userOBJ: any) => {
+            const newUser = new User(userOBJ);
+            // console.log(newUser);
+            this.store.dispatch(new SetUserAction(newUser));
           }
         );
+      } else {
+        this.unsubscribe();
       }
     });
   }
