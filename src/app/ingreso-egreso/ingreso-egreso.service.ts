@@ -5,14 +5,16 @@ import { AuthService } from '../auth/auth.service';
 import { Subscription } from 'rxjs';
 import { AppState } from '../app.reducer';
 import { Store } from '@ngrx/store';
-import { filter } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
+import { SetItemsAction } from './ingreso-egreso.actions';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IngresoEgresoService {
 
-  subscripcion: Subscription;
+  initIngresoEgresoSubscripcion: Subscription = new Subscription();
+  initIngresoEgresoItemsSubscripcion: Subscription = new Subscription();
   constructor(
     private aFDB: AngularFirestore,
     public authS: AuthService,
@@ -20,7 +22,7 @@ export class IngresoEgresoService {
   ) { }
 
   initIngresoEgresoListener() {
-    this.store.select('auth')
+    this.initIngresoEgresoSubscripcion = this.store.select('auth')
     .pipe(
       filter( auth => auth.user != null)
     )
@@ -29,10 +31,28 @@ export class IngresoEgresoService {
     );
   }
   private ingresoEgresoItems(uid: string ) {
-    this.aFDB.collection(`${uid}/ingresos-egresos/items`)
-    .valueChanges()
-    .subscribe(docData => {console.log(docData);
+    this.initIngresoEgresoItemsSubscripcion = this.aFDB.collection(`${uid}/ingresos-egresos/items`)
+    .snapshotChanges()
+    .pipe(
+      map(
+        docData => {
+          return docData.map( doc => {
+            return {
+              uid: doc.payload.doc.id,
+              ... doc.payload.doc.data()
+            };
+          });
+        }
+      )
+    )
+    .subscribe((coleccion: any[]) => {
+      // console.log(coleccion);
+      this.store.dispatch(new SetItemsAction(coleccion));
     });
+  }
+  cancelarSubscripcions() {
+    this.initIngresoEgresoItemsSubscripcion.unsubscribe();
+    this.initIngresoEgresoSubscripcion.unsubscribe();
   }
 
   crearIngresoEgreso(inresoEgreso: IngresoEgreso) {
