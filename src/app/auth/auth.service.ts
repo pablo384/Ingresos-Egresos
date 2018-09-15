@@ -18,6 +18,7 @@ import { SetUserAction } from './auth.actions';
 export class AuthService {
 
   private subscripcionUser: Subscription;
+  private usuario: User;
 
   constructor(private afAuth: AngularFireAuth,
     private router: Router,
@@ -33,11 +34,12 @@ export class AuthService {
         .subscribe(
           (userOBJ: any) => {
             const newUser = new User(userOBJ);
-            // console.log(newUser);
+            this.usuario = newUser;
             this.store.dispatch(new SetUserAction(newUser));
           }
         );
       } else {
+        this.usuario = null;
         this.unsubscribe();
       }
     });
@@ -78,9 +80,11 @@ export class AuthService {
     this.store.dispatch(new ActivarLoadingAction());
     this.afAuth.auth
       .signInWithEmailAndPassword(email, password)
-      .then(res => {
-        // console.log(res);
+      .then((res: any) => {
+        console.log(res);
         this.store.dispatch(new DesactivarLoadingAction());
+        this.usuario = new User(res.user);
+        this.store.dispatch(new SetUserAction(this.usuario));
         this.router.navigate(['/']);
       })
       .catch(err => {
@@ -107,5 +111,8 @@ export class AuthService {
   }
   unsubscribe() {
     this.subscripcionUser.unsubscribe();
+  }
+  getUsuario() {
+    return {... this.usuario};
   }
 }
