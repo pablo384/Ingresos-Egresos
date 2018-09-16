@@ -70,4 +70,8 @@ export class IngresoEgresoService {
 
     // });
   }
+  borrarIngresoEgreso(uid: string) {
+    const user = this.authS.getUsuario();
+    return this.aFDB.doc(`${user.uid}/ingresos-egresos/items/${uid}`).delete();
+  }
 }
