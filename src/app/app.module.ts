@@ -23,6 +23,7 @@ import { appReducers } from './app.reducer';
 import { OrdenIngresoEgresoPipe } from './ingreso-egreso/orden-ingreso-egreso.pipe';
 import { ChartsModule } from 'ng2-charts';
 import { AuthModule } from './auth/auth.module';
+import { SharedModule } from './shared/shared.module';
 
 
 @NgModule({
@@ -34,14 +35,15 @@ import { AuthModule } from './auth/auth.module';
     IngresoEgresoComponent,
     EstadisticaComponent,
     DetalleComponent,
-    FooterComponent,
-    NavbarComponent,
-    SidebarComponent,
+    // FooterComponent,
+    // NavbarComponent,
+    // SidebarComponent,
     OrdenIngresoEgresoPipe
   ],
   imports: [
     BrowserModule,
     AuthModule,
+    SharedModule,
     AppRoutingModule,
     // FormsModule,
     ReactiveFormsModule,
