@@ -81,9 +81,10 @@ export class AuthService {
     this.afAuth.auth
       .signInWithEmailAndPassword(email, password)
       .then((res: any) => {
-        // console.log(res);
+        console.log(res);
         this.store.dispatch(new DesactivarLoadingAction());
         this.usuario = new User(res.user);
+        console.log(this.usuario);
         this.store.dispatch(new SetUserAction(this.usuario));
         this.router.navigate(['/']);
       })

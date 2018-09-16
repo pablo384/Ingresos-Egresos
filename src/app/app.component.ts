@@ -9,11 +9,11 @@ import { AuthService } from './auth/auth.service';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'ingresoEgresoApp';
 
-  constructor(public authS: AuthService) { }
+  constructor() { }
   ngOnInit(): void {
-    this.authS.initAuthListener();
+    // this.authS.initAuthListener();
   }
   ngOnDestroy() {
-    this.authS.unsubscribe();
+    // this.authS.unsubscribe();
   }
 }
