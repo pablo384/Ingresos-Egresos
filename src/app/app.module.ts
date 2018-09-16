@@ -22,13 +22,14 @@ import { SweetAlert2Module } from '@toverux/ngx-sweetalert2';
 import { appReducers } from './app.reducer';
 import { OrdenIngresoEgresoPipe } from './ingreso-egreso/orden-ingreso-egreso.pipe';
 import { ChartsModule } from 'ng2-charts';
+import { AuthModule } from './auth/auth.module';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    RegisterComponent,
+    // LoginComponent,
+    // RegisterComponent,
     DashboardComponent,
     IngresoEgresoComponent,
     EstadisticaComponent,
@@ -40,8 +41,9 @@ import { ChartsModule } from 'ng2-charts';
   ],
   imports: [
     BrowserModule,
+    AuthModule,
     AppRoutingModule,
-    FormsModule,
+    // FormsModule,
     ReactiveFormsModule,
     StoreModule.forRoot(appReducers),
     StoreDevtoolsModule.instrument({
@@ -50,7 +52,7 @@ import { ChartsModule } from 'ng2-charts';
     }),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    AngularFireAuthModule,
+    // AngularFireAuthModule,
     ChartsModule,
     SweetAlert2Module.forRoot({
       buttonsStyling: false,
