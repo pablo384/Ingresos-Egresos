@@ -8,13 +8,15 @@ import { OrdenIngresoEgresoPipe } from './orden-ingreso-egreso.pipe';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
 import { SharedModule } from '../shared/shared.module';
+import { DashboardRoutingModule } from '../dashboard/dashboard-routing.module';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     ChartsModule,
-    SharedModule
+    SharedModule,
+    DashboardRoutingModule
   ],
   declarations: [
     DetalleComponent,
